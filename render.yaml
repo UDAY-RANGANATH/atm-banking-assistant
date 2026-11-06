@@ -1,0 +1,17 @@
+# Render Blueprint: free-tier backend host for the Vercel kiosk.
+# Deploy: Render Dashboard -> New + -> Blueprint -> pick this repo.
+services:
+  - type: web
+    name: atm-banking-assistant-backend
+    runtime: docker
+    rootDir: backend
+    plan: free
+    healthCheckPath: /api/ai/health
+    envVars:
+      - key: ALLOWED_ORIGINS
+        value: http://localhost:5173,http://127.0.0.1:5173,https://frontend-dun-zeta-12.vercel.app
+      - key: DEBUG
+        value: "0"
+      # AI_PROVIDER defaults to mock (deterministic, no secrets needed).
+      # Later, set AI_PROVIDER=openai_compatible + AI_API_KEY as a Render
+      # secret env var - never commit it.
