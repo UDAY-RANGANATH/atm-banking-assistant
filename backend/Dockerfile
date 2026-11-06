@@ -1,6 +1,6 @@
 # Backend runtime for hosted deployments (Render free tier).
 # Deterministic backend stays the sole authority for all banking operations.
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
       tesseract-ocr \
