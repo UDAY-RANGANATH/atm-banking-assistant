@@ -5,8 +5,9 @@ from functools import lru_cache
 class Settings(BaseSettings):
     APP_NAME: str = "AI Banking Assistant"
     APP_VERSION: str = "1.0.0"
-    DEBUG: bool = True
+    DEBUG: bool = True  # prototype default; set DEBUG=False in production
     SECRET_KEY: str = "dev-secret-change-in-production"
+    ALLOWED_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"  # comma-separated list; tighten for production
 
     AI_PROVIDER: str = "mock"  # one of: mock | openai_compatible
     AI_API_KEY: str = ""  # server-side only; never exposed to the frontend

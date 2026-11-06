@@ -41,7 +41,7 @@ _TESSERACT_CANDIDATES = [
 ]
 
 # Active tessdata: use the bundled project tessdata so hin/tel are guaranteed.
-# The path may contain spaces ("Uday Ranganath"), which breaks pytesseract's
+# The path may contain spaces (e.g. "C:\Users\Some Name"), which breaks pytesseract's
 # command splitting - so resolve to the Windows 8.3 short path when possible.
 import ctypes
 
