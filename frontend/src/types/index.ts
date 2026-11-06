@@ -19,6 +19,13 @@ export interface DocumentRequirement {
   alternatives: string[]
 }
 
+export interface LocalizedServiceView {
+  name: string
+  description: string
+  eligibility: string
+  estimatedTime: string
+}
+
 export interface BankingService {
   id: string
   category: string
@@ -31,11 +38,15 @@ export interface BankingService {
   eligibility: string
   documents: DocumentRequirement[]
   estimatedTime: string
+  /** Localized display strings per language code (te/hi), English fields remain the fallback. */
+  localized?: Record<string, LocalizedServiceView>
 }
 
 export interface ServiceCategory {
   key: string
   label: string
+  /** Localized category labels per language code (te/hi). */
+  localizedLabel?: Record<string, string>
 }
 
 export interface ChatMessage {

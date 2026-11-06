@@ -12,6 +12,10 @@ from app.services.banking_services import (
     get_categories,
     BankingService,
 )
+from app.services.service_translations import (
+    localized_service_fields,
+    category_labels,
+)
 from app.services.document_engine import (
     DocumentDefinition,
     ServiceDocumentMapping,
@@ -81,11 +85,20 @@ class BankingServiceResponse(BaseModel):
     eligibility: str
     documents: List[DocumentRequirementResponse]
     estimatedTime: str
+    localized: Dict[str, Dict[str, str]] = {}
 
 
 class CategoryResponse(BaseModel):
     key: str
     label: str
+    localizedLabel: Dict[str, str] = {}
+
+
+def _service_response(svc: BankingService) -> Dict[str, Any]:
+    """Serialized service including localized display fields (te/hi)."""
+    data = svc.model_dump()
+    data["localized"] = localized_service_fields(svc)
+    return data
 
 
 # ---------------------------------------------------------------------------
@@ -174,8 +187,13 @@ async def delete_session(session_id: str):
 
 @router.get("/services/categories", response_model=List[CategoryResponse])
 async def get_service_categories():
-    """Return all service categories."""
-    return get_categories()
+    """Return all service categories, with localized labels."""
+    result = []
+    for cat in get_categories():
+        entry = dict(cat)
+        entry["localizedLabel"] = category_labels(cat["key"])
+        result.append(entry)
+    return result
 
 
 @router.get("/services", response_model=List[BankingServiceResponse])
@@ -185,7 +203,7 @@ async def list_services(category: Optional[str] = None):
         services = get_services_by_category(category)
     else:
         services = get_all_services()
-    return services
+    return [_service_response(s) for s in services]
 
 
 @router.get("/services/{service_id}", response_model=BankingServiceResponse)
@@ -194,7 +212,7 @@ async def get_service_details(service_id: str):
     svc = get_service(service_id)
     if not svc:
         raise HTTPException(status_code=404, detail="Service not found")
-    return svc
+    return _service_response(svc)
 
 
 # ---------------------------------------------------------------------------

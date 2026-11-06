@@ -7,6 +7,7 @@ import { HelpModal } from '../components/HelpModal'
 import { useSession } from '../hooks/useSession'
 import { api } from '../services/api'
 import { BankingService, ServiceCategory } from '../types'
+import { serviceView, categoryLabel } from '../services/localize'
 
 export default function Home() {
   const { session, sendAiMessage } = useSession()
@@ -54,9 +55,15 @@ export default function Home() {
 
   const filteredServices = services.filter((s) => {
     const matchCategory = activeCategory === 'all' || s.category === activeCategory
+    const q = searchQuery.toLowerCase()
+    const view = serviceView(s, language)
+    // Search matches both the localized and the canonical English strings,
+    // so kiosk users can search however they name the service.
     const matchSearch =
-      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.description.toLowerCase().includes(searchQuery.toLowerCase())
+      s.name.toLowerCase().includes(q) ||
+      s.description.toLowerCase().includes(q) ||
+      view.name.toLowerCase().includes(q) ||
+      view.description.toLowerCase().includes(q)
     return matchCategory && matchSearch
   })
 
@@ -140,7 +147,7 @@ export default function Home() {
                     : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
                 }`}
               >
-                {cat.label}
+                {categoryLabel(cat, language)}
               </button>
             ))}
           </div>
@@ -157,27 +164,29 @@ export default function Home() {
           {!loading && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredServices.length > 0 ? (
-                filteredServices.map((service) => (
+                filteredServices.map((service) => {
+                  const v = serviceView(service, language)
+                  return (
                   <div
                     key={service.id}
                     className="card-elevated p-5 hover:shadow-xl transition border border-slate-200"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-xs font-semibold text-navy-900 uppercase tracking-wider">
-                        {service.name.split(' ').slice(0, 2).join(' ')}
+                        {v.name.split(' ').slice(0, 2).join(' ')}
                       </span>
                       <span className="text-xs bg-gold-100 text-gold-700 px-2 py-1 rounded">
                         {service.formNumber}
                       </span>
                     </div>
                     <h3 className="text-lg font-bold text-navy-900 mb-1">
-                      {service.name}
+                      {v.name}
                     </h3>
                     <p className="text-sm text-slate-600 mb-3 line-clamp-2">
-                      {service.description}
+                      {v.description}
                     </p>
                     <div className="flex items-center justify-between mb-3 text-xs">
-                      <span className="text-slate-500">{service.estimatedTime}</span>
+                      <span className="text-slate-500">{v.estimatedTime}</span>
                       <span className="text-[10px] text-slate-400 uppercase tracking-wider">
                         {service.isPrototype ? 'Prototype' : 'Official'}
                       </span>
@@ -199,7 +208,8 @@ export default function Home() {
                       </button>
                     </div>
                   </div>
-                ))
+                  )
+                })
               ) : (
                 <div className="col-span-3 text-center py-10 text-slate-500">
                   <Grid2x2 size={32} className="mx-auto mb-3 opacity-50" />

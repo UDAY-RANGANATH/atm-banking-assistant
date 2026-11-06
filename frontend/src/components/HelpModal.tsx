@@ -1,5 +1,6 @@
 import { X, ChevronRight, FileText, Clock, UserCheck, Info } from 'lucide-react'
 import { t, Language } from '../i18n'
+import { serviceView } from '../services/localize'
 
 interface HelpModalProps {
   isOpen: boolean
@@ -10,6 +11,8 @@ interface HelpModalProps {
 
 export function HelpModal({ isOpen, onClose, service, language }: HelpModalProps) {
   if (!isOpen) return null
+
+  const v = service ? serviceView(service, language) : null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -28,7 +31,7 @@ export function HelpModal({ isOpen, onClose, service, language }: HelpModalProps
             </div>
             <div>
               <h3 className="font-bold text-lg">{t(language, 'services.helpDialogTitle')}</h3>
-              <p className="text-xs text-slate-300">{service.name}</p>
+              <p className="text-xs text-slate-300">{v?.name ?? service.name}</p>
             </div>
           </div>
           <button
@@ -54,7 +57,7 @@ export function HelpModal({ isOpen, onClose, service, language }: HelpModalProps
 
             {/* Short description */}
             <div>
-              <p className="text-sm text-slate-600 leading-relaxed">{service.description}</p>
+              <p className="text-sm text-slate-600 leading-relaxed">{v?.description ?? service.description}</p>
             </div>
 
             {/* Eligibility */}
@@ -64,7 +67,7 @@ export function HelpModal({ isOpen, onClose, service, language }: HelpModalProps
                 <div className="text-xs font-semibold text-navy-900 uppercase tracking-wider mb-1">
                   {t(language, 'services.eligibilityLabel')}
                 </div>
-                <p className="text-sm text-slate-700">{service.eligibility}</p>
+                <p className="text-sm text-slate-700">{v?.eligibility ?? service.eligibility}</p>
               </div>
             </div>
 
@@ -75,7 +78,7 @@ export function HelpModal({ isOpen, onClose, service, language }: HelpModalProps
                 <div className="text-xs font-semibold text-navy-900 uppercase tracking-wider mb-1">
                   {t(language, 'services.estimatedTimeLabel')}
                 </div>
-                <p className="text-sm text-slate-700">{service.estimatedTime}</p>
+                <p className="text-sm text-slate-700">{v?.estimatedTime ?? service.estimatedTime}</p>
               </div>
             </div>
 
