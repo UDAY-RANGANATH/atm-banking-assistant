@@ -1,0 +1,20 @@
+fastapi==0.115.0
+uvicorn==0.32.1
+sqlalchemy>=2.0.36
+pydantic==2.9.2
+python-dotenv==1.0.1
+pydantic-settings==2.4.0
+python-multipart==0.0.33
+
+# Phase 4 - Camera scanner / OCR engine
+opencv-python-headless==5.0.0.93
+pytesseract==0.3.13
+pillow>=13.0.0
+numpy>=2.5.0
+
+# Phase 6 - Application PDF generation
+# PyMuPDF is used instead of ReportLab: only its Story/HTML layout engine
+# performs HarfBuzz complex-script shaping, which the multilingual PDFs
+# (Hindi/Telugu) require. fontTools is needed for font subsetting.
+pymupdf>=2.1.0
+fonttools>=4.68.0

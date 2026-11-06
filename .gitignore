@@ -1,0 +1,23 @@
+# --- dependencies / build artifacts ---
+node_modules/
+dist/
+test-results/
+playwright-report/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# --- environment / secrets ---
+.env
+.env.local
+*.local
+
+# --- runtime data (never commit) ---
+backend/atm_banking.db
+backend/temp_scans/
+backend/generated_pdfs/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.log
